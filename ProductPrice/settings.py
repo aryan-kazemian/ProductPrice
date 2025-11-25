@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
-    # 'debug_toolbar',
+    'debug_toolbar',
 
     'Products',
 ]
@@ -106,14 +106,15 @@ else:
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
-            "NAME": "mydatabase",
-            "USER": "myuser",
-            "PASSWORD": "mypassword",
+            "NAME": "ProductPrice",
+            "USER": "postgres",
+            "PASSWORD": "138461011e",
             "HOST": "localhost",
             "PORT": "5432",
             "CONN_MAX_AGE": 600,
         }
     }
+
 
 
 # Password validation
