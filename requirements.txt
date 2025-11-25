@@ -11,7 +11,4 @@ six==1.17.0
 sqlparse==0.5.3
 tzdata==2025.2
 psycopg2-binary==2.9.11
-polars==0.20.31
-
-
-
+polars-lts-cpu[excel]==0.20.31
