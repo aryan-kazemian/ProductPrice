@@ -1,8 +1,8 @@
 from django.db import models
 
 class Product(models.Model):
-    barcode = models.CharField(max_length=100, unique=True, db_index=True)
-    product_name = models.CharField(max_length=255)
+    barcode = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=255)
     on_pack = models.BooleanField(default=False)
     sale_price = models.DecimalField(max_digits=10, decimal_places=2)
     off_price = models.DecimalField(max_digits=10, decimal_places=2)

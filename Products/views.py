@@ -32,6 +32,10 @@ class PriceRecordUploadAPIView(APIView):
 
         errors = []
         price_records_to_create = []
+        price_records_to_update = []
+
+        existing_records = {pr.barcode: pr for pr in PriceRecord.objects.all()}
+
         for idx, row in df.iterrows():
             barcode = str(row['barcode']).strip()
             try:
@@ -40,21 +44,27 @@ class PriceRecordUploadAPIView(APIView):
                 errors.append(f"Row {idx + 1}: Price '{row['price']}' is not a valid number.")
                 continue
 
-            price_records_to_create.append(
-                PriceRecord(barcode=barcode, price=price)
-            )
+            if barcode in existing_records:
+                existing_records[barcode].price = price
+                price_records_to_update.append(existing_records[barcode])
+            else:
+                price_records_to_create.append(
+                    PriceRecord(barcode=barcode, price=price)
+                )
 
         if errors:
             return Response({"errors": errors}, status=status.HTTP_400_BAD_REQUEST)
 
-        PriceRecord.objects.all().delete()
-        PriceRecord.objects.bulk_create(price_records_to_create)
+        if price_records_to_update:
+            PriceRecord.objects.bulk_update(price_records_to_update, ['price'])
+        if price_records_to_create:
+            PriceRecord.objects.bulk_create(price_records_to_create)
 
         sync_price_records()
 
         return Response(
             {
-                "message": f"{len(price_records_to_create)} PriceRecord items uploaded and product prices updated successfully."},
+                "message": f"{len(price_records_to_create) + len(price_records_to_update)} PriceRecord items uploaded and product prices updated successfully."},
             status=status.HTTP_201_CREATED
         )
 
@@ -86,12 +96,12 @@ def sync_price_records():
             print(f"[NO CHANGE] {product.product_name} ({barcode}) | Price unchanged at {price}.")
             continue
 
+
         old_price = product.sale_price
         new_price = price
 
-        print(f"[PRICE UPDATED] {product.product_name} ({barcode}) | {old_price} → {new_price}")
-
-        product.sale_price = new_price
+        if not product.on_pack:
+            product.sale_price = new_price
         if product.on_pack:
             product.flag = True
 
