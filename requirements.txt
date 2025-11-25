@@ -11,4 +11,3 @@ tzdata==2025.2
 psycopg2-binary==2.9.11
 polars-lts-cpu[excel]==0.20.31
 xlsx2csv==0.8.1
-

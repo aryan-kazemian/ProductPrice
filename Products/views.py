@@ -4,7 +4,7 @@ from rest_framework import status
 import polars as pl
 from .models import Product, PriceRecord, PriceChangeLog
 from .serializers import PriceRecordUploadSerializer
-
+from io import BytesIO
 from django.db import transaction
 
 class PriceRecordUploadAPIView(APIView):
@@ -14,7 +14,8 @@ class PriceRecordUploadAPIView(APIView):
         uploaded_file = serializer.validated_data['file']
 
         try:
-            df = pl.read_excel(uploaded_file.read())
+            excel_bytes = uploaded_file.read()
+            df = pl.read_excel(BytesIO(excel_bytes))
         except Exception as e:
             return Response({"error": f"Invalid XLSX file: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
 
