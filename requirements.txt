@@ -2,9 +2,7 @@ asgiref==3.11.0
 Django==5.2.8
 djangorestframework==3.16.1
 et-xmlfile==2.0.0
-numpy==1.26.4
 openpyxl==3.1.5
-pandas==2.3.3
 python-dateutil==2.9.0.post0
 pytz==2025.2
 six==1.17.0
@@ -12,3 +10,5 @@ sqlparse==0.5.3
 tzdata==2025.2
 psycopg2-binary==2.9.11
 polars-lts-cpu[excel]==0.20.31
+xlsx2csv==0.8.1
+
